@@ -1,0 +1,129 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\Profile;
+use App\Models\Education;
+use App\Models\Comment;
+use Illuminate\Http\Request;
+
+class ProfileController extends Controller
+{
+    // একটাই প্রোফাইল দেখানোর জন্য
+    public function index() {
+        $profile = Profile::with('educations','comments')->first();
+        return view('profile.index', compact('profile'));
+    }
+
+    // প্রোফাইল তৈরি ফর্ম
+    public function create() {
+        return view('profile.create');
+    }
+
+    // প্রোফাইল সংরক্ষণ
+    public function store(Request $request) {
+        $request->validate([
+            'name'=>'required',
+            'gender'=>'required',
+        ]);
+
+        $image_path = null;
+        if($request->hasFile('image')){
+            $image_path = $request->file('image')->store('profile_images','public');
+        }
+
+        Profile::create([
+            'name'=>$request->name,
+            'gender'=>$request->gender,
+            'hobby'=>$request->hobby,
+            'image'=>$image_path
+        ]);
+
+        return redirect()->route('profile.index');
+    }
+
+    // প্রোফাইল edit
+    public function edit(Profile $profile) {
+        return view('profile.edit', compact('profile'));
+    }
+
+    // প্রোফাইল update
+    public function update(Request $request, Profile $profile){
+        $request->validate([
+            'name'=>'required',
+            'gender'=>'required',
+        ]);
+
+        if($request->hasFile('image')){
+            $profile->image = $request->file('image')->store('profile_images','public');
+        }
+
+        $profile->name = $request->name;
+        $profile->gender = $request->gender;
+        $profile->hobby = $request->hobby;
+        $profile->save();
+
+        return redirect()->route('profile.index');
+    }
+
+    // প্রোফাইল delete
+    public function destroy(Profile $profile){
+        if($profile->image){
+            \Storage::disk('public')->delete($profile->image);
+        }
+        $profile->delete(); // cascade delete
+        return redirect()->route('profile.index');
+    }
+
+    // Education add
+    public function storeEducation(Request $request){
+        $request->validate([
+            'degree'=>'required',
+            'institute'=>'required',
+            'session'=>'required',
+            'ending'=>'required',
+        ]);
+
+        $profile = Profile::first(); // শুধু একটাই প্রোফাইল
+        $profile->educations()->create($request->all());
+
+        return back();
+    }
+
+    // Education delete
+    public function deleteEducation($id){
+        Education::findOrFail($id)->delete();
+        return back();
+    }
+
+    // Comment add
+    public function storeComment(Request $request){
+        $request->validate([
+            'comment'=>'required',
+        ]);
+
+        $image_path = null;
+        if($request->hasFile('image')){
+            $image_path = $request->file('image')->store('comments','public');
+        }
+
+        $profile = Profile::first();
+        $profile->comments()->create([
+            'commenter_name'=>$request->commenter_name,
+            'comment'=>$request->comment,
+            'image'=>$image_path
+        ]);
+
+        return back();
+    }
+
+    // Comment delete
+    public function deleteComment($id){
+        $comment = Comment::findOrFail($id);
+        if($comment->image){
+            \Storage::disk('public')->delete($comment->image);
+        }
+        $comment->delete();
+        return back();
+    }
+}

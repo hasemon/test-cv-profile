@@ -34,24 +34,4 @@
     </table>
 </div>
 
-{{-- Comment Section --}}
-{{-- <div class="card p-3">
-    <h5>Comments</h5>
-    <form action="{{ route('comments.store',$profile) }}" method="POST" enctype="multipart/form-data" class="row g-2 mb-3">
-        @csrf
-        <div class="col-md-3"><input name="commenter_name" class="form-control" placeholder="Your Name"></div>
-        <div class="col-md-5"><input name="text" class="form-control" placeholder="Comment text"></div>
-        <div class="col-md-3"><input type="file" name="image" class="form-control"></div>
-        <div class="col-md-1"><button class="btn btn-success">Post</button></div>
-    </form>
-    @foreach($profile->comments as $c)
-    <div class="border p-2 mb-2">
-        <strong>{{ $c->commenter_name ?? 'Anonymous' }}</strong>
-        <p>{{ $c->text }}</p>
-        @if($c->image)
-        <img src="{{ asset('storage/'.$c->image) }}" width="120">
-        @endif
-    </div>
-    @endforeach
-</div> --}}
 @endsection

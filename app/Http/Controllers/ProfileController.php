@@ -2,6 +2,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Profile;
+use App\Models\Education;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -11,10 +12,13 @@ class ProfileController extends Controller
     public function create()
     {
         $profile = Profile::first();
-        if ($profile) {
-            return redirect()->route('profile.show');
+        // if ($profile) 
+        {
+         return view('profiles.create', compact('profile'));
+        // 
         }
-        return view('profiles.create');
+
+        // return view('profiles.create');
     }
 
     public function store(Request $request)
@@ -46,25 +50,24 @@ class ProfileController extends Controller
     // We'll use the 'create' view for update as well, so no separate edit needed
     // The 'show' view contains the update form structure.
 
-    public function update(Request $request)
+    public function update(Request $request, Education $education)
     {
-        $profile = Profile::firstOrFail();
-        $data = $request->except(['_token', '_method']);
+        $request->validate([
+            'degree' => 'required|string|max:255',
+            'institute' => 'required|string|max:255',
+            'start_date' => 'required|string|max:50',
+            'end_year' => 'required|string|max:10',
+        ]);
 
-        if ($request->hasFile('photo')) {
-            if ($profile->photo) {
-                Storage::disk('public')->delete($profile->photo);
-            }
-            $data['photo'] = $request->file('photo')->store('photos', 'public');
-        } elseif (!$request->has('photo')) {
-             // If photo input is empty, and we are updating, we don't want to overwrite the photo
-            unset($data['photo']); 
+        if ($education->profile->id !== Profile::first()->id) {
+            return back()->with('error', 'Unauthorized action.');
         }
 
-        $profile->update($data); // WARNING: Unsecured Mass Assignment
+        $education->update($request->except(['_token', '_method']));
 
-        return redirect()->route('profile.show')->with('success', 'Profile updated successfully.');
+        return back()->with('success', 'Educational entry updated successfully.');
     }
+
 
     public function destroy()
     {

@@ -29,6 +29,8 @@ Route::prefix('profile')->group(function () {
 
 // Education Routes (Linked to the single profile)
 Route::post('education', [EducationController::class, 'store'])->name('education.store');
+// for updating an existing education entry
+Route::put('education/{education}', [EducationController::class, 'update'])->name('education.update'); // 🆕 added
 Route::delete('education/{education}', [EducationController::class, 'destroy'])->name('education.destroy');
 
 // Comment Route (Linked to the single profile)

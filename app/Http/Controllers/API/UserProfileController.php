@@ -4,10 +4,12 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ProfileRequest;
+use App\Models\Comment;
 use App\Models\UserInfo;
 use App\Service\ProfileService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class UserProfileController extends Controller
 {
@@ -59,5 +61,18 @@ class UserProfileController extends Controller
         } catch (\Throwable $th) {
             return $this->errorJsonResponse($th);
         }
+    }
+
+    public function destroy($id)
+    {
+        $userInfo = UserInfo::select('id')->where('id', $id)->first();
+        if (empty($userInfo)) return $this->errorJsonResponse("Profile Not Found");
+        DB::beginTransaction();
+            if (!$userInfo->delete()) return $this->errorJsonResponse("Failed to delete profile");
+
+            if(!Comment::where('user_info_id', $id)->delete()) return $this->errorJsonResponse("Failed to delete comment");
+        DB::commit();
+
+        return  $this->successJsonResponse("Profile Deleted");
     }
 }

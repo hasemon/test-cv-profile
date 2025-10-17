@@ -11,13 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('user_infos', function (Blueprint $table) {
+        Schema::create('comments', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('image')->nullable();
-            $table->enum('gender', ['male', 'female'])->nullable();
-            $table->json('hobbies')->nullable();
-            $table->json('education_information')->nullable();
+            $table->foreignId('user_info_id')->constrained('user_infos');
+            $table->text('comment_text')->nullable();
+            $table->string('comment_image')->nullable();
             $table->timestamps();
         });
     }
@@ -27,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('user_infos');
+        Schema::dropIfExists('comments');
     }
 };

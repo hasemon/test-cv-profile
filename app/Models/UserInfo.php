@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class UserInfo extends Model
 {
-    use HasFactory, softDeletes;
+    use HasFactory;
 
     protected $guarded = [];
 

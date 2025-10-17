@@ -13,6 +13,7 @@
                     <br>
 
                     <b-button
+                        v-if="hasProfile"
                         variant="primary"
                         @click="$router.push({ name: 'profile.page', query: { is_manage: false } });"
                         class="mt-2"
@@ -29,6 +30,33 @@
 
 <script>
 
+import axios from "axios";
+import { HTTP } from "@/http.js";
+
 export default {
+    data() {
+        return {
+            hasProfile: false,
+        }
+    },
+    methods: {
+        fetchProfile() {
+            axios.get(`${HTTP.baseURL}/api/profile`)
+                .then(response => {
+                    const {data} = response.data;
+                    if (!data) return;
+
+                    this.hasProfile = !!data.name;
+
+                })
+                .catch(err => {
+                    console.error(err);
+                    alert("Failed to fetch profile");
+                });
+        },
+    },
+    created() {
+        this.fetchProfile();
+    },
 }
 </script>

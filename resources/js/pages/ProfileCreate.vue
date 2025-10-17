@@ -2,17 +2,18 @@
     <b-container class="mt-5">
         <b-row class="justify-content-center">
             <b-col cols="12" md="6">
-                <b-card header="Edit Profile" header-bg-variant="primary" header-text-variant="white" class="shadow-sm">
+                <b-card header="Create Profile" header-bg-variant="primary" header-text-variant="white" class="shadow-sm">
 
                     <div class="text-center mb-4">
                         <b-img
-                            :src="avatarPreview || `${HTTP.baseURL}/storage/${profile.image}`"
+                            :src="avatarPreview || profile.image"
                             rounded="circle"
                             class="border"
                             fluid
                             style="width: 120px; height: 120px; object-fit: cover;"
                         ></b-img>
                     </div>
+
 
                         <b-form-group label="Name" label-for="name">
                             <b-form-input
@@ -32,7 +33,10 @@
                         </b-form-group>
 
                         <b-form-group label="Hobbies">
-                            <b-form-checkbox-group v-model="profile.hobbies" :options="hobbiesOptions" name="hobbies"></b-form-checkbox-group>
+                            <b-form-checkbox-group
+                            v-model="profile.hobbies"
+                            :options="hobbiesOptions"
+                        ></b-form-checkbox-group>
                         </b-form-group>
 
                         <b-form-group label="Profile Image">
@@ -41,6 +45,7 @@
                                 @change="onFileChange"
                             ></b-form-file>
                         </b-form-group>
+
 
                         <b-form-group label="Education" class="mt-2">
                             <div v-for="(edu, index) in profile.education" :key="index" class="mb-3 border p-2 rounded">
@@ -76,9 +81,9 @@
 
                             <b-button size="sm" variant="success" @click="addEducation">Add Education</b-button>
                         </b-form-group>
-                        <b-button type="submit" variant="primary" class="mt-2" style="margin-right: 2px;" @click="updateChanges(profile)" block>Save Changes</b-button>
-                        <b-button variant="primary" @click="$router.push({ name: 'profile.page' })" class="mt-2">Back to Profile</b-button>
 
+                        <b-button type="submit" variant="primary" class="mt-2" style="margin-right: 2px;" @click="createChanges(profile)" block>Save Changes</b-button>
+                        <b-button variant="primary" @click="$router.push({ name: 'profile.page' })" class="mt-2">Back to Profile</b-button>
 
                     <b-alert
                         v-if="message"
@@ -97,15 +102,8 @@
 
 <script>
 import {useProfileList} from "@/pages/useProfileList.js";
-import {HTTP} from "@/http.js";
-import axios from "axios";
 
 export default {
-    computed: {
-        HTTP() {
-            return HTTP
-        }
-    },
     data() {
         return {
             profile: {
@@ -135,43 +133,18 @@ export default {
         removeEducation(index) {
             this.profile.education.splice(index, 1);
         },
-        fetchProfile() {
-            axios.get(`${HTTP.baseURL}/api/profile`)
-                .then(response => {
-                    const {data} = response.data;
-                    if (!data) return;
-
-                    this.hasProfile = !!data.name;
-
-                    this.profile.id = data.id ?? null;
-                    this.profile.name = data.name ?? null;
-                    this.profile.gender = data.gender ?? null;
-                    this.profile.hobbies = Array.isArray(data.hobbies) ? data.hobbies : JSON.parse(data.hobbies || '[]');
-                    this.profile.education = Array.isArray(data.education) ? data.education : JSON.parse(data.education || '[]');
-                    this.profile.image = data.image ?? null;
-
-                    console.log("profileData after fetch:", this.profile);
-                })
-                .catch(err => {
-                    console.error(err);
-                    alert("Failed to fetch profile");
-                });
-        },
-    },
-    created() {
-        this.fetchProfile();
     },
     setup() {
 
         const {
-            updateChanges,
+            createChanges,
             avatarFile,
             avatarPreview,
             onFileChange
         } = useProfileList()
 
         return {
-            updateChanges,
+            createChanges,
             avatarFile,
             avatarPreview,
             onFileChange

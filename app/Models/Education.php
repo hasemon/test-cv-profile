@@ -6,7 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class Education extends Model
 {
-     protected $fillable = ['profile_id', 'degree', 'institute', 'start_date', 'end_year'];
+    protected $guarded=[];
 
-    public function profile() { return $this->belongsTo(Profile::class); }
+    public function profile() {
+        return $this->belongsTo(Profile::class); 
+    }
 }

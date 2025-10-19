@@ -20,12 +20,12 @@ class EducationController extends Controller
         $profile = Profile::first();
         $profile->educations()->create($request->all());
 
-        return back();
+        return redirect()->route('profile.index')->with('success', 'Education added successfully!');
     }
 
     public function destroy($id)
     {
         Education::findOrFail($id)->delete();
-        return back();
+        return back()->with('success', 'Education deleted successfully!');
     }
 }

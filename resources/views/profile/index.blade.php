@@ -71,6 +71,7 @@
             @method('DELETE')
             <button type="submit" class="bg-red-500 hover:bg-red-600 text-white px-6 py-2 rounded-lg font-semibold">Delete Profile</button>
         </form>
+        
 
         <!-- Comments Section -->
         <div>

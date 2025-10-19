@@ -37,7 +37,7 @@ class ProfileController extends Controller
             'image' => $image_path,
         ]);
 
-        return redirect()->route('profile.index');
+        return redirect()->route('profile.index')->with('success', 'Profile created successfully!');
     }
 
     public function edit(Profile $profile) {
@@ -67,7 +67,7 @@ class ProfileController extends Controller
             'hobby' => $request->hobby,
         ]);
 
-        return redirect()->route('profile.index');
+        return redirect()->route('profile.index')->with('success', 'Profile updated successfully!');
     }
 
     public function destroy(Profile $profile) {
@@ -76,6 +76,7 @@ class ProfileController extends Controller
         }
 
         $profile->delete();
-        return redirect()->route('profile.index');
+
+        return redirect()->route('profile.index')->with('success', 'Profile deleted successfully!');
     }
 }

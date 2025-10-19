@@ -29,7 +29,7 @@ class CommentController extends Controller
             'image' => $image_path,
         ]);
 
-        return back();
+        return redirect()->route('profile.index')->with('success', 'Comment added successfully!');
     }
 
     public function destroy($id)
@@ -41,6 +41,6 @@ class CommentController extends Controller
         }
 
         $comment->delete();
-        return back();
+        return back()->with('success', 'Comment deleted successfully!');
     }
 }

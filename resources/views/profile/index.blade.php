@@ -1,13 +1,7 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body>
+@extends('layout.master')
+@section('title', 'My Profile')
+
+@section('content')
     <h1 class="bg-[rgba(45,197,159,0.88)] text-white text-4xl px-6 py-2 text-center">
         my profile
     </h1>
@@ -120,6 +114,4 @@
         <p class="text-center bg-red-500 text-white">No profile found. <a href="{{ route('profile.create') }}" class="bg-green-500 p-1 m-1 rounded-2xl">Create Profile</a></p>
     @endif
 
-
-</body>
-</html>
+@endsection

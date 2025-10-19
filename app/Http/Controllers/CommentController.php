@@ -12,6 +12,8 @@ class CommentController extends Controller
     {
         $request->validate([
             'comment' => 'required',
+            'commenter_name' => 'required',
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
 
         $image_path = null;

@@ -34,6 +34,15 @@
         <h2 class="text-3xl font-bold text-center text-teal-600 mb-6"></h2>
 
         <!-- Education Section -->
+        @if ($errors->any())
+            <div class="bg-red-100 text-red-700 p-3 rounded mb-4">
+                <ul class="list-disc pl-5">
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
         <div class="mb-10 align-middle mx-auto">
             <h3 class="text-2xl font-semibold text-gray-700 mb-4">Education</h3>
             <ul class="space-y-3">
@@ -56,10 +65,10 @@
             <form action="{{ route('education.store') }}" method="POST" class="mt-6 bg-gray-50 p-4 rounded-lg shadow-sm space-y-3">
                 @csrf
                 <div class="grid grid-cols-2 gap-4">
-                    <input type="text" name="degree" placeholder="Degree" class="border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-teal-400">
-                    <input type="text" name="institute" placeholder="Institute" class="border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-teal-400">
-                    <input type="text" name="session" placeholder="Session" class="border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-teal-400">
-                    <input type="text" name="ending" placeholder="Ending" class="border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-teal-400">
+                    <input type="text" value="{{ old('degree') }}" name="degree" placeholder="Degree" class="border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-teal-400">
+                    <input type="text" value="{{ old('institute') }}" name="institute" placeholder="Institute" class="border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-teal-400">
+                    <input type="text" value="{{ old('session') }}" name="session" placeholder="Session" class="border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-teal-400">
+                    <input type="text" value="{{ old('ending') }}" name="ending" placeholder="Ending" class="border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-teal-400">
                 </div>
                 <button type="submit" class="bg-teal-600 hover:bg-teal-700 text-white px-4 py-2 rounded-lg font-semibold">Add Education</button>
             </form>
@@ -103,8 +112,8 @@
             <form action="{{ route('comment.store') }}" method="POST" enctype="multipart/form-data" class="mt-6 bg-gray-50 p-4 rounded-lg shadow-sm space-y-3">
                 @csrf
                 <div class="grid grid-cols-2 gap-4">
-                    <input type="text" name="commenter_name" placeholder="Your Name" class="border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-teal-400">
-                    <input type="text" name="comment" placeholder="Comment" class="border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-teal-400">
+                    <input type="text" value="{{ old('commenter_name') }}" name="commenter_name" placeholder="Your Name" class="border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-teal-400">
+                    <input type="text" value="{{ old('comment') }}" name="comment" placeholder="Comment" class="border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-teal-400">
                     <input type="file" name="image" class="col-span-2 border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-teal-400">
                 </div>
                 <button type="submit" class="bg-teal-600 hover:bg-teal-700 text-white px-4 py-2 rounded-lg font-semibold">Add Comment</button>

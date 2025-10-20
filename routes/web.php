@@ -8,6 +8,7 @@ use App\Http\Controllers\EducationController;
 use App\Http\Controllers\CommentController;
 
 
+
 Route::middleware(['auth'])->group(function () {
     Route::resource('profiles', ProfileController::class);
 

@@ -6,6 +6,7 @@ use App\Models\Profile;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Auth;
 
 class ProfileController extends Controller
 {
@@ -28,14 +29,14 @@ class ProfileController extends Controller
             'name' => 'required|string|max:255',
             'gender' => 'required|in:Male,Female,Other',
             'hobbies' => 'nullable|string',
-            'avatar' => 'nullable|image|max:2048',
+            'avatar' => 'nullable|image|max:5120',
         ]);
 
         if ($request->hasFile('avatar')) {
             $validated['avatar'] = $request->file('avatar')->store('avatars', 'public');
         }
 
-        $validated['user_id'] = auth()->id();
+        $validated['user_id'] = Auth::id();
 
         Profile::create($validated);
 
@@ -64,7 +65,7 @@ class ProfileController extends Controller
             'name' => 'required|string|max:255',
             'gender' => 'required|in:Male,Female,Other',
             'hobbies' => 'nullable|string',
-            'avatar' => 'nullable|image|max:2048',
+            'avatar' => 'nullable|image',
         ]);
 
         if ($request->hasFile('avatar')) {

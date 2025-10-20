@@ -5,7 +5,37 @@ import CommentForm from "@/Components/CommentForm";
 
 
 export default function Index() {
-  const { profiles, auth } = usePage().props;
+  const { profiles = [], auth } = usePage().props;
+
+
+  const defaultProfile = {
+    id: 0,
+    name: "Abdullah",
+    gender: "Abdullah",
+    hobbies: "Reading, Programming",
+    avatar: "/images/avatar.png" ,
+    educations: [
+      {
+        id: 1,
+        degree: "Bachelor of Computer Science",
+        institute: "Presidency University",
+        start_date: "2022",
+        end_year: "2026",
+      },
+    ],
+    comments: [
+      {
+        id: 1,
+        text: "This is a Default Comment.",
+        image: "/images/avatar.png",
+        user: { name: "Demo User" },
+      },
+    ],
+    user_id: null,
+  };
+
+
+  const displayedProfiles = profiles.length > 0 ? profiles : [defaultProfile];
 
   return (
     <div className="min-h-screen bg-gray-50 py-8 px-4">
@@ -22,103 +52,95 @@ export default function Index() {
         </div>
 
         {/* Profiles List */}
-        {profiles.length === 0 ? (
-          <p className="text-center text-gray-500">No profiles yet.</p>
-        ) : (
-          profiles.map((profile) => (
-            <div
-              key={profile.id}
-              className="bg-white rounded-lg shadow-md p-6 space-y-6"
-            >
-              {/* Profile Section */}
-              <div className="flex items-center space-x-4">
-                <img
-                  src={
-                    profile.avatar
-                      ? `/storage/${profile.avatar}`
-                      : "https://cdn-icons-png.flaticon.com/512/149/149071.png"
-                  }
-                  alt="Profile"
-                  className="w-20 h-20 rounded-full object-cover"
-                />
-                <div>
-                  <h3 className="text-xl font-semibold text-gray-800">
-                    {profile.name}
-                  </h3>
-                  <p className="text-gray-600">Gender: {profile.gender}</p>
-                  <p className="text-gray-600">Hobbies: {profile.hobbies}</p>
-                </div>
-              </div>
-
-              {/* Education Section */}
+        {displayedProfiles.map((profile) => (
+          <div
+            key={profile.id}
+            className="bg-white rounded-lg shadow-md p-6 space-y-6"
+          >
+            {/* Profile Section */}
+            <div className="flex items-center space-x-4">
+              <img
+                src={
+                  profile.avatar
+                    ? `/storage/${profile.avatar}`
+                    : "/images/avatar.png"
+                }
+                alt="Profile"
+                className="w-20 h-20 rounded-full object-cover"
+              />
               <div>
-                <h2 className="text-2xl font-bold text-gray-800 mb-3">
-                  Education
-                </h2>
-                {profile.educations.length > 0 ? (
-                  profile.educations.map((education) => (
-                    <div
-                      key={education.id}
-                      className="border-l-4 border-blue-500 pl-4 mb-3"
-                    >
-                      <h3 className="text-lg font-semibold text-gray-800">
-                        {education.degree}
-                      </h3>
-                      <p className="text-gray-600">
-                        {education.institute}
+                <h3 className="text-xl font-semibold text-gray-800">
+                  {profile.name}
+                </h3>
+                <p className="text-gray-600">Gender: {profile.gender}</p>
+                <p className="text-gray-600">Hobbies: {profile.hobbies}</p>
+              </div>
+            </div>
+
+            {/* Education Section */}
+            <div>
+              <h2 className="text-2xl font-bold text-gray-800 mb-3">Education</h2>
+              {profile.educations?.length > 0 ? (
+                profile.educations.map((education) => (
+                  <div
+                    key={education.id}
+                    className="border-l-4 border-blue-500 pl-4 mb-3"
+                  >
+                    <h3 className="text-lg font-semibold text-gray-800">
+                      {education.degree}
+                    </h3>
+                    <p className="text-gray-600">{education.institute}</p>
+                    <p className="text-gray-500 text-sm">
+                      {education.start_date} - {education.end_year}
+                    </p>
+                  </div>
+                ))
+              ) : (
+                <p className="text-gray-500">No education details added.</p>
+              )}
+
+              {/* Add Education Form (skip for default) */}
+              {profile.id !== 0 && <EducationForm profileId={profile.id} />}
+            </div>
+
+            {/* Comment Section */}
+            <div>
+              <h2 className="text-2xl font-bold text-gray-800 mb-3">Comments</h2>
+              {profile.comments?.length > 0 ? (
+                profile.comments.map((comment) => (
+                  <div
+                    key={comment.id}
+                    className="flex items-start space-x-3 mb-3"
+                  >
+                    <img
+                      src={
+                        comment.image
+                          ? comment.image
+                          : "/images/avatar.png"
+                      }
+                      alt="comment"
+                      className="w-10 h-10 rounded-full object-cover"
+                    />
+                    <div className="flex-1">
+                      <p className="text-gray-800 bg-gray-100 rounded-lg px-4 py-2">
+                        {comment.text}
                       </p>
-                      <p className="text-gray-500 text-sm">
-                        {education.start_date} - {education.end_year}
+                      <p className="text-sm text-gray-400">
+                        — {comment.user?.name || "Guest"}
                       </p>
                     </div>
-                  ))
-                ) : (
-                  <p className="text-gray-500">No education details added.</p>
-                )}
+                  </div>
+                ))
+              ) : (
+                <p className="text-gray-500">No comments yet.</p>
+              )}
 
-                {/* Add Education Form */}
-                <EducationForm profileId={profile.id} />
-              </div>
+              {/* Add Comment Form (skip for default) */}
+              {profile.id !== 0 && <CommentForm profileId={profile.id} />}
+            </div>
 
-              {/* Comment Section */}
-              <div>
-                <h2 className="text-2xl font-bold text-gray-800 mb-3">
-                  Comments
-                </h2>
-                {profile.comments.length > 0 ? (
-                  profile.comments.map((comment) => (
-                    <div
-                      key={comment.id}
-                      className="flex items-start space-x-3 mb-3"
-                    >
-                      <img
-                        src={
-                          comment.image
-                            ? `/storage/${comment.image}`
-                            : ""
-                        }
-                        alt="comment"
-                        className="w-10 h-10 rounded-full object-cover"
-                      />
-                      <div className="flex-1">
-                        <p className="text-gray-800 bg-gray-100 rounded-lg px-4 py-2">
-                          {comment.text}
-                        </p>
-                        <p className="text-sm text-gray-400">
-                          — {comment.user?.name || "Guest"}
-                        </p>
-                      </div>
-                    </div>
-                  ))
-                ) : (
-                  <p className="text-gray-500">No comments yet.</p>
-                )}
-
-                {/* Add Comment Form */}
-                <CommentForm profileId={profile.id} />
-              </div>
-
-              {/* Buttons */}
+            {/* Buttons */}
+            {profile.id !== 0 && (
               <div className="flex space-x-3 pt-4">
                 <Link
                   href={route("profiles.show", profile.id)}
@@ -134,13 +156,10 @@ export default function Index() {
                       className="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5"
                       onClick={() => {
                         if (
-                          confirm(
-                            "Are you sure you want to delete this profile?"
-                          )
+                          confirm("Are you sure you want to delete this profile?")
                         ) {
                           router.delete(route("profiles.destroy", profile.id), {
-                            onSuccess: () =>
-                              console.log("Deleted successfully"),
+                            onSuccess: () => console.log("Deleted successfully"),
                             onError: (err) =>
                               console.error("Delete failed", err),
                           });
@@ -159,9 +178,9 @@ export default function Index() {
                   </>
                 )}
               </div>
-            </div>
-          ))
-        )}
+            )}
+          </div>
+        ))}
       </div>
     </div>
   );

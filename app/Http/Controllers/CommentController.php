@@ -6,6 +6,7 @@ use App\Models\Comment;
 use App\Models\Profile;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Auth;
 
 class CommentController extends Controller
 {
@@ -13,14 +14,14 @@ class CommentController extends Controller
     {
         $validated = $request->validate([
             'text' => 'nullable|string',
-            'image' => 'nullable|image|max:2048',
+            'image' => 'nullable|image|max:5120',
         ]);
 
         if ($request->hasFile('image')) {
             $validated['image'] = $request->file('image')->store('comments', 'public');
         }
 
-        $validated['user_id'] = auth()->id();
+        $validated['user_id'] = Auth::id();
         $validated['profile_id'] = $profile->id;
 
         Comment::create($validated);
